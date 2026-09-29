@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -24,28 +24,13 @@
     </script>
 
     <style>
-        /* --- CSS VARIABLES & THEMES --- */
-        :root {
-            --bg-base: #f8fafc;
-            --bg-surface: rgba(255, 255, 255, 0.8);
-            --bg-surface-solid: #ffffff;
-            --border-color: rgba(226, 232, 240, 0.8);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #94a3b8;
-            --accent-primary: #6366f1;
-            --accent-hover: #4f46e5;
-            --glass-blur: 20px;
-            --glass-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.06);
-            --radius-sm: 10px;
-            --radius-md: 20px;
-            --radius-lg: 35px;
-            --radius-square: 0px; 
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        /* --- BASE CANVAS & PREVENTION OF WHITE FLASH --- */
+        html, body {
+            background-color: #090d16;
         }
 
-        [data-theme="dark"] {
+        /* --- CSS VARIABLES & THEMES --- */
+        :root {
             --bg-base: #090d16;
             --bg-surface: rgba(15, 23, 42, 0.8);
             --bg-surface-solid: #151f32;
@@ -55,7 +40,27 @@
             --text-muted: #64748b;
             --accent-primary: #818cf8;
             --accent-hover: #6366f1;
+            --glass-blur: 20px;
             --glass-shadow: 0 15px 45px -10px rgba(0, 0, 0, 0.4);
+            --radius-sm: 10px;
+            --radius-md: 20px;
+            --radius-lg: 35px;
+            --radius-square: 0px; 
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-surface: rgba(255, 255, 255, 0.8);
+            --bg-surface-solid: #ffffff;
+            --border-color: rgba(226, 232, 240, 0.8);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent-primary: #6366f1;
+            --accent-hover: #4f46e5;
+            --glass-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.06);
         }
 
         /* --- BASE STYLES --- */
@@ -647,15 +652,16 @@
         }
 
         /* ========================================================= */
-        /* --- 18+ & GENDER VERIFICATION POPUP (OPTIMIZED) --- */
+        /* --- 18+ & GENDER VERIFICATION POPUP (OPTIMIZED & MOBILE READY) --- */
         /* ========================================================= */
         #identity-verification-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(9, 13, 22, 0.6); 
+            width: 100%;
+            height: 100%;
+            min-height: 100vh;
+            background: rgba(9, 13, 22, 0.85); 
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             z-index: 9999999;
@@ -663,20 +669,23 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow-y: auto;
             transition: opacity 0.3s ease, visibility 0.3s ease;
+            -webkit-overflow-scrolling: touch;
         }
 
         .identity-modal {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 24px;
             padding: 40px 30px;
             max-width: 450px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(34, 197, 94, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(34, 197, 94, 0.15);
             color: #f8fafc;
             transform: translateY(0);
+            margin: auto;
         }
 
         .identity-icon {
@@ -733,6 +742,7 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .gender-btn svg {
@@ -764,6 +774,7 @@
             color: #cbd5e1;
             user-select: none;
             font-weight: 500;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .age-checkbox-container input {
@@ -819,6 +830,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .enter-btn.active {
@@ -834,44 +846,56 @@
         }
     </style>
 
-    <!-- Global Smart Popunder System Definition (Top placement for instant initialization) -->
+    <!-- Global Smart Popunder System & Configuration Definition -->
     <script>
+        // --- SMART POPUNDER CONFIGURATION ---
+        window.USER_CONFIG = {
+            personalLinks: {
+                loginLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198",
+                signupLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
+            },
+            ads: {
+                // স্মার্ট পপআন্ডার লিংক - এটি শুধুমাত্র প্রথম ক্লিকের জন্য ব্যাকগ্রাউন্ডে কাজ করবে
+                enableSmartPopunder: true,
+                smartPopunderUrl: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
+            }
+        };
+
         // 1st Click Popunder Tracker (Global to avoid user frustration)
         let smartActionTriggered = false;
 
-        // The Smart Action Handler Logic
+        // The Smart Action Handler Logic - 1st Click Popunder, 2nd Click Target Link
         function handleSmartAction(e, targetUrl, actionType, isDirectLink) {
             if (e) e.preventDefault();
             
-            // Get Config from bottom script block
-            const popUrl = (typeof window.USER_CONFIG !== 'undefined' && window.USER_CONFIG.ads.smartPopunderUrl) 
+            // Get Config
+            const popUrl = (window.USER_CONFIG && window.USER_CONFIG.ads && window.USER_CONFIG.ads.smartPopunderUrl) 
                            ? window.USER_CONFIG.ads.smartPopunderUrl : "";
-            const isEnabled = (typeof window.USER_CONFIG !== 'undefined' && window.USER_CONFIG.ads.enableSmartPopunder);
+            const isEnabled = (window.USER_CONFIG && window.USER_CONFIG.ads && window.USER_CONFIG.ads.enableSmartPopunder);
             
+            // Trigger Popunder ONLY on first click & do NOT redirect main site on 1st click
             if (isEnabled && !smartActionTriggered && popUrl && popUrl !== "#") {
-                // First interaction -> Execute Hidden Popunder
                 smartActionTriggered = true; 
                 try {
-                    const popWin = window.open(popUrl, '_blank');
-                    if (popWin) {
-                        popWin.blur();
+                    const win = window.open(popUrl, '_blank');
+                    if (win) {
+                        win.blur();
                         window.focus();
                     }
-                } catch (err) {}
-                
-                // Do not navigate the user, keep them on the current view
-                return false;
+                } catch (err) {
+                    console.warn("Popunder blocked by browser:", err);
+                }
+                return false; // ১ম ক্লিকে মূল পেজের রিডাইরেক্ট হবে না
+            }
+            
+            // ২য় ক্লিক এবং পরবর্তী ক্লিকগুলোতে ইউজার নির্দিষ্ট বাটন বা কাঙ্ক্ষিত লিংকে যাবে
+            if (isDirectLink) {
+                window.location.href = targetUrl;
             } else {
-                // Second interaction (or if already triggered) -> Execute default button functionality
-                if (isDirectLink) {
-                    window.location.href = targetUrl;
+                if (typeof triggerRedirect === "function") {
+                    triggerRedirect(targetUrl, actionType);
                 } else {
-                    // Ensures we use the existing redirect loading functionality
-                    if (typeof triggerRedirect === "function") {
-                        triggerRedirect(targetUrl, actionType);
-                    } else {
-                        window.location.href = targetUrl;
-                    }
+                    window.location.href = targetUrl;
                 }
             }
         }
@@ -879,11 +903,17 @@
 </head>
 <body>
 
-    <!-- Instant Check to Prevent Modal Flash on Reload -->
+    <!-- Instant Check to Prevent Modal Flash (Netlify and Mobile Safe) -->
     <script>
-        if (localStorage.getItem("identityVerified") === "true") {
-            document.write('<style>#identity-verification-overlay { display: none !important; }</style>');
-        }
+        (function() {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            if (localStorage.getItem("identityVerified") === "true") {
+                var style = document.createElement('style');
+                style.id = 'hide-identity-overlay-style';
+                style.innerHTML = '#identity-verification-overlay { display: none !important; }';
+                document.head.appendChild(style);
+            }
+        })();
     </script>
 
     <!-- ========================================================= -->
@@ -931,7 +961,7 @@
         </div>
     </div>
 
-    <!-- Lightning Fast Verification Script (No Popunders here) -->
+    <!-- Verification Script -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const authOverlay = document.getElementById('identity-verification-overlay');
@@ -960,9 +990,10 @@
                 }
             }
 
-            // Click: Fast Gender Selection
+            // Fast Gender Selection
             genderBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     genderBtns.forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     isGenderSelected = true;
@@ -970,29 +1001,39 @@
                 });
             });
 
-            // Click: Fast Checkbox Click
-            ageCheckbox.addEventListener('change', (e) => {
-                isAgeVerified = e.target.checked;
-                updateEnterButton();
-            });
+            // Fast Checkbox Click
+            if (ageCheckbox) {
+                ageCheckbox.addEventListener('change', (e) => {
+                    isAgeVerified = e.target.checked;
+                    updateEnterButton();
+                });
+            }
 
-            // Click: Enter Site Click
-            enterBtn.addEventListener('click', () => {
-                if (isGenderSelected && isAgeVerified) {
-                    localStorage.setItem("identityVerified", "true");
-                    authOverlay.style.opacity = '0';
-                    authOverlay.style.visibility = 'hidden';
-                    document.body.style.overflow = ''; 
-                    
-                    setTimeout(() => {
-                        authOverlay.remove();
-                    }, 300);
-                }
-            });
+            // Enter Site Click
+            if (enterBtn) {
+                enterBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (isGenderSelected && isAgeVerified) {
+                        localStorage.setItem("identityVerified", "true");
+                        if (authOverlay) {
+                            authOverlay.style.opacity = '0';
+                            authOverlay.style.visibility = 'hidden';
+                        }
+                        document.body.style.overflow = ''; 
+                        
+                        if (typeof loadExternalAds === "function") {
+                            loadExternalAds();
+                        }
+                        
+                        setTimeout(() => {
+                            if (authOverlay) authOverlay.remove();
+                        }, 300);
+                    }
+                });
+            }
         });
     </script>
     <!-- ========================================================= -->
-
 
     <header class="glass">
         <div class="container">
@@ -1018,10 +1059,10 @@
                     </div>
 
                     <button class="theme-toggle glass-solid" id="themeToggleBtn" aria-label="Toggle Theme">
-                        <svg class="sun-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none; display:none;" viewBox="0 0 24 24">
+                        <svg class="sun-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none; display:block;" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                         </svg>
-                        <svg class="moon-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none;" viewBox="0 0 24 24">
+                        <svg class="moon-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none; display:none;" viewBox="0 0 24 24">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </button>
@@ -1202,19 +1243,6 @@
 
     <script>
         //<![CDATA[
-        
-        // --- SMART POPUNDER CONFIGURATION ---
-        window.USER_CONFIG = {
-            personalLinks: {
-                loginLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198",
-                signupLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
-            },
-            ads: {
-                // এখানে আপনার স্মার্ট পপআন্ডার লিংক বসান, এটি উল্লেখিত ৭টি বাটনে শুধু প্রথম ক্লিকের জন্য কাজ করবে
-                enableSmartPopunder: true,
-                smartPopunderUrl: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
-            }
-        };
 
         const DATABASE = {
             settings: { activeText: "online" },
@@ -1594,16 +1622,22 @@
 
         function initializeThemeSystem() {
             const toggleBtn = document.getElementById("themeToggleBtn");
+            if (!toggleBtn) return;
             const sun = toggleBtn.querySelector(".sun-icon");
             const moon = toggleBtn.querySelector(".moon-icon");
             localStorage.removeItem("CHRONICLE_THEME");
-            let activeTheme = "dark";
+            let activeTheme = document.documentElement.getAttribute("data-theme") || "dark";
 
             function applyTheme(target) {
                 document.documentElement.setAttribute("data-theme", target);
                 localStorage.setItem("CHRONICLE_THEME", target);
-                if (target === "dark") { sun.style.display = "block"; moon.style.display = "none"; }
-                else { sun.style.display = "none"; moon.style.display = "block"; }
+                if (target === "dark") { 
+                    if(sun) sun.style.display = "block"; 
+                    if(moon) moon.style.display = "none"; 
+                } else { 
+                    if(sun) sun.style.display = "none"; 
+                    if(moon) moon.style.display = "block"; 
+                }
             }
             applyTheme(activeTheme);
             toggleBtn.addEventListener("click", () => {
@@ -1622,7 +1656,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Apply theme, date, news ticker, etc.
             initializeThemeSystem();
             initializeCalendarEngine();
             initializeTicker();
@@ -1651,12 +1684,25 @@
         //]]>
     </script>
     
-    <!-- ============================================================== -->
-    <!-- 🟢 PLACE YOUR POPUNDER AND SOCIAL BAR AD SCRIPT CODES HERE 🟢 -->
-    <!-- ============================================================== -->
+    <!-- External Ads Loader -->
+    <script>
+        function loadExternalAds() {
+            const scripts = [
+                "https://pl31344698.profitableratecpmnetwork.com/d5/cc/1c/d5cc1ca9a7219e70060e7eb10be50e86.js",
+                "https://pl31344696.profitableratecpmnetwork.com/4c/3f/6f/4c3f6fb5039e94ed3e4c305915510f6e.js"
+            ];
+            
+            scripts.forEach(src => {
+                const s = document.createElement('script');
+                s.src = src;
+                s.async = true;
+                document.body.appendChild(s);
+            });
+        }
 
-<script src="https://pl31344698.profitableratecpmnetwork.com/d5/cc/1c/d5cc1ca9a7219e70060e7eb10be50e86.js"></script>
-
-    <script src="https://pl31344696.profitableratecpmnetwork.com/4c/3f/6f/4c3f6fb5039e94ed3e4c305915510f6e.js"></script>
+        if (localStorage.getItem("identityVerified") === "true") {
+            loadExternalAds();
+        }
+    </script>
 </body>
 </html>

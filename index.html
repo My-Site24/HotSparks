@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -24,33 +24,8 @@
     </script>
 
     <style>
-        /* --- BASE CANVAS & PREVENTION OF WHITE FLASH --- */
-        html, body {
-            background-color: #090d16;
-        }
-
         /* --- CSS VARIABLES & THEMES --- */
         :root {
-            --bg-base: #090d16;
-            --bg-surface: rgba(15, 23, 42, 0.8);
-            --bg-surface-solid: #151f32;
-            --border-color: rgba(51, 65, 85, 0.4);
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #64748b;
-            --accent-primary: #818cf8;
-            --accent-hover: #6366f1;
-            --glass-blur: 20px;
-            --glass-shadow: 0 15px 45px -10px rgba(0, 0, 0, 0.4);
-            --radius-sm: 10px;
-            --radius-md: 20px;
-            --radius-lg: 35px;
-            --radius-square: 0px; 
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        [data-theme="light"] {
             --bg-base: #f8fafc;
             --bg-surface: rgba(255, 255, 255, 0.8);
             --bg-surface-solid: #ffffff;
@@ -60,7 +35,27 @@
             --text-muted: #94a3b8;
             --accent-primary: #6366f1;
             --accent-hover: #4f46e5;
+            --glass-blur: 20px;
             --glass-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.06);
+            --radius-sm: 10px;
+            --radius-md: 20px;
+            --radius-lg: 35px;
+            --radius-square: 0px; 
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-base: #090d16;
+            --bg-surface: rgba(15, 23, 42, 0.8);
+            --bg-surface-solid: #151f32;
+            --border-color: rgba(51, 65, 85, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --accent-primary: #818cf8;
+            --accent-hover: #6366f1;
+            --glass-shadow: 0 15px 45px -10px rgba(0, 0, 0, 0.4);
         }
 
         /* --- BASE STYLES --- */
@@ -652,16 +647,15 @@
         }
 
         /* ========================================================= */
-        /* --- 18+ & GENDER VERIFICATION POPUP (OPTIMIZED & MOBILE READY) --- */
+        /* --- 18+ & GENDER VERIFICATION POPUP (OPTIMIZED) --- */
         /* ========================================================= */
         #identity-verification-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            min-height: 100vh;
-            background: rgba(9, 13, 22, 0.85); 
+            width: 100vw;
+            height: 100vh;
+            background: rgba(9, 13, 22, 0.6); 
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             z-index: 9999999;
@@ -669,23 +663,20 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            overflow-y: auto;
             transition: opacity 0.3s ease, visibility 0.3s ease;
-            -webkit-overflow-scrolling: touch;
         }
 
         .identity-modal {
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 24px;
             padding: 40px 30px;
             max-width: 450px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(34, 197, 94, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(34, 197, 94, 0.1);
             color: #f8fafc;
             transform: translateY(0);
-            margin: auto;
         }
 
         .identity-icon {
@@ -742,7 +733,6 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .gender-btn svg {
@@ -774,7 +764,6 @@
             color: #cbd5e1;
             user-select: none;
             font-weight: 500;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .age-checkbox-container input {
@@ -830,7 +819,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .enter-btn.active {
@@ -846,56 +834,44 @@
         }
     </style>
 
-    <!-- Global Smart Popunder System & Configuration Definition -->
+    <!-- Global Smart Popunder System Definition (Top placement for instant initialization) -->
     <script>
-        // --- SMART POPUNDER CONFIGURATION ---
-        window.USER_CONFIG = {
-            personalLinks: {
-                loginLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198",
-                signupLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
-            },
-            ads: {
-                // স্মার্ট পপআন্ডার লিংক - এটি শুধুমাত্র প্রথম ক্লিকের জন্য ব্যাকগ্রাউন্ডে কাজ করবে
-                enableSmartPopunder: true,
-                smartPopunderUrl: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
-            }
-        };
-
         // 1st Click Popunder Tracker (Global to avoid user frustration)
         let smartActionTriggered = false;
 
-        // The Smart Action Handler Logic - 1st Click Popunder, 2nd Click Target Link
+        // The Smart Action Handler Logic
         function handleSmartAction(e, targetUrl, actionType, isDirectLink) {
             if (e) e.preventDefault();
             
-            // Get Config
-            const popUrl = (window.USER_CONFIG && window.USER_CONFIG.ads && window.USER_CONFIG.ads.smartPopunderUrl) 
+            // Get Config from bottom script block
+            const popUrl = (typeof window.USER_CONFIG !== 'undefined' && window.USER_CONFIG.ads.smartPopunderUrl) 
                            ? window.USER_CONFIG.ads.smartPopunderUrl : "";
-            const isEnabled = (window.USER_CONFIG && window.USER_CONFIG.ads && window.USER_CONFIG.ads.enableSmartPopunder);
+            const isEnabled = (typeof window.USER_CONFIG !== 'undefined' && window.USER_CONFIG.ads.enableSmartPopunder);
             
-            // Trigger Popunder ONLY on first click & do NOT redirect main site on 1st click
             if (isEnabled && !smartActionTriggered && popUrl && popUrl !== "#") {
+                // First interaction -> Execute Hidden Popunder
                 smartActionTriggered = true; 
                 try {
-                    const win = window.open(popUrl, '_blank');
-                    if (win) {
-                        win.blur();
+                    const popWin = window.open(popUrl, '_blank');
+                    if (popWin) {
+                        popWin.blur();
                         window.focus();
                     }
-                } catch (err) {
-                    console.warn("Popunder blocked by browser:", err);
-                }
-                return false; // ১ম ক্লিকে মূল পেজের রিডাইরেক্ট হবে না
-            }
-            
-            // ২য় ক্লিক এবং পরবর্তী ক্লিকগুলোতে ইউজার নির্দিষ্ট বাটন বা কাঙ্ক্ষিত লিংকে যাবে
-            if (isDirectLink) {
-                window.location.href = targetUrl;
+                } catch (err) {}
+                
+                // Do not navigate the user, keep them on the current view
+                return false;
             } else {
-                if (typeof triggerRedirect === "function") {
-                    triggerRedirect(targetUrl, actionType);
-                } else {
+                // Second interaction (or if already triggered) -> Execute default button functionality
+                if (isDirectLink) {
                     window.location.href = targetUrl;
+                } else {
+                    // Ensures we use the existing redirect loading functionality
+                    if (typeof triggerRedirect === "function") {
+                        triggerRedirect(targetUrl, actionType);
+                    } else {
+                        window.location.href = targetUrl;
+                    }
                 }
             }
         }
@@ -903,17 +879,11 @@
 </head>
 <body>
 
-    <!-- Instant Check to Prevent Modal Flash (Netlify and Mobile Safe) -->
+    <!-- Instant Check to Prevent Modal Flash on Reload -->
     <script>
-        (function() {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            if (localStorage.getItem("identityVerified") === "true") {
-                var style = document.createElement('style');
-                style.id = 'hide-identity-overlay-style';
-                style.innerHTML = '#identity-verification-overlay { display: none !important; }';
-                document.head.appendChild(style);
-            }
-        })();
+        if (localStorage.getItem("identityVerified") === "true") {
+            document.write('<style>#identity-verification-overlay { display: none !important; }</style>');
+        }
     </script>
 
     <!-- ========================================================= -->
@@ -961,7 +931,7 @@
         </div>
     </div>
 
-    <!-- Verification Script -->
+    <!-- Lightning Fast Verification Script (No Popunders here) -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const authOverlay = document.getElementById('identity-verification-overlay');
@@ -990,10 +960,9 @@
                 }
             }
 
-            // Fast Gender Selection
+            // Click: Fast Gender Selection
             genderBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
+                btn.addEventListener('click', () => {
                     genderBtns.forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     isGenderSelected = true;
@@ -1001,39 +970,29 @@
                 });
             });
 
-            // Fast Checkbox Click
-            if (ageCheckbox) {
-                ageCheckbox.addEventListener('change', (e) => {
-                    isAgeVerified = e.target.checked;
-                    updateEnterButton();
-                });
-            }
+            // Click: Fast Checkbox Click
+            ageCheckbox.addEventListener('change', (e) => {
+                isAgeVerified = e.target.checked;
+                updateEnterButton();
+            });
 
-            // Enter Site Click
-            if (enterBtn) {
-                enterBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (isGenderSelected && isAgeVerified) {
-                        localStorage.setItem("identityVerified", "true");
-                        if (authOverlay) {
-                            authOverlay.style.opacity = '0';
-                            authOverlay.style.visibility = 'hidden';
-                        }
-                        document.body.style.overflow = ''; 
-                        
-                        if (typeof loadExternalAds === "function") {
-                            loadExternalAds();
-                        }
-                        
-                        setTimeout(() => {
-                            if (authOverlay) authOverlay.remove();
-                        }, 300);
-                    }
-                });
-            }
+            // Click: Enter Site Click
+            enterBtn.addEventListener('click', () => {
+                if (isGenderSelected && isAgeVerified) {
+                    localStorage.setItem("identityVerified", "true");
+                    authOverlay.style.opacity = '0';
+                    authOverlay.style.visibility = 'hidden';
+                    document.body.style.overflow = ''; 
+                    
+                    setTimeout(() => {
+                        authOverlay.remove();
+                    }, 300);
+                }
+            });
         });
     </script>
     <!-- ========================================================= -->
+
 
     <header class="glass">
         <div class="container">
@@ -1059,10 +1018,10 @@
                     </div>
 
                     <button class="theme-toggle glass-solid" id="themeToggleBtn" aria-label="Toggle Theme">
-                        <svg class="sun-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none; display:block;" viewBox="0 0 24 24">
+                        <svg class="sun-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none; display:none;" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                         </svg>
-                        <svg class="moon-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none; display:none;" viewBox="0 0 24 24">
+                        <svg class="moon-icon" style="width:20px; height:20px; stroke:var(--text-primary); stroke-width:2; fill:none;" viewBox="0 0 24 24">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </button>
@@ -1243,6 +1202,19 @@
 
     <script>
         //<![CDATA[
+        
+        // --- SMART POPUNDER CONFIGURATION ---
+        window.USER_CONFIG = {
+            personalLinks: {
+                loginLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198",
+                signupLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
+            },
+            ads: {
+                // এখানে আপনার স্মার্ট পপআন্ডার লিংক বসান, এটি উল্লেখিত ৭টি বাটনে শুধু প্রথম ক্লিকের জন্য কাজ করবে
+                enableSmartPopunder: true,
+                smartPopunderUrl: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
+            }
+        };
 
         const DATABASE = {
             settings: { activeText: "online" },
@@ -1262,172 +1234,26 @@
             ],
 
             categories: [
-                
-  { id: "Juno Clark", name: "Juno Clark", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/v6fk4RVM/2a555c9279dc3e943c276d16cbee8f88-f.jpg"] },
-
-  { id: "Rose Mery", name: "Rose Mery", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/JVpGMsb/5c3d98b1b374058d1f0200949f990143-f.jpg"] },
-
-  { id: "Mellissa Rose", name: "Mellissa Rose", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/GzcrjRS/6e1a39f283f42953ee2292b9e03287ca-f.jpg"] },
-
-  { id: "Emily Chloe", name: "Emily Chloe", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/s9n10y3p/508b32445aa5c25c5adeb3c88515ee58-f.jpg"] },
-
-  { id: "Eva Quinn", name: "Eva Quinn", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/SXNfCkQf/defca82911b61bd8f3a4392cb7c7246c-f.jpg"] },
-
-  { id: "Natalia Hannah", name: "Natalia Hannah", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/BK7XmZXz/9063de66194322c91be6d1c47a13ee96-f.jpg"] },
-
-  { id: "Mira Blake", name: "Mira Blake", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/rfvS0RKr/ca811d71cd59147491bbb2a5199d935e-f.jpg"] },
-
-  { id: "Ayla Grant", name: "Ayla Grant", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/xtCTYq9f/87e52bcd39caba10907eafbf72753184-f.jpg"] },
-
-  { id: "Lena Walsh", name: "Lena Walsh", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/0y0mDT6r/33691a3f7a9a1867003deb8f69e1200c-f.jpg"] },
-
-  { id: "Gia Palmer", name: "Gia Palmer", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/B2N4JtZK/1000072631.jpg"] },
-
-  { id: "Kyla Reed", name: "Kyla Reed", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/RpBDsFKX/39d3b2b17457d67378692603c950deab-f-1.jpg"] },
-
-  { id: "Nia Lawson", name: "Nia Lawson", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/HT0s35tF/dbd5d2215d370f9de579b5a1521e3126-f.jpg"] },
-
-  { id: "Vera Sutton", name: "Vera Sutton", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/hFnKNGfD/95db6ae7b24553e1d4b5ac48d5c8cf68-f.jpg"] },
-
-  { id: "Sia Harper", name: "Sia Harper", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/d01m0JFh/12.jpg"] },
-
-  { id: "Maya Rhodes", name: "Maya Rhodes", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/1YDFPHQp/60dbe9e09429cf95173d17fff3adaa11-f.jpg"] },
-
-  { id: "Lana Ellis", name: "Lana Ellis", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/fGqdM6rm/IMG-20260626-213027.jpg"] },
-
-  { id: "Rhea Brooks", name: "Rhea Brooks", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/N5q2vZ4/fe93d0407ea2c38820d11563ae1917bd-f.jpg"] },
-
-  { id: "Aria Vaughn", name: "Aria Vaughn", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/q3pvM7vr/fdfdc629992be08cd8ca7df49a789acc-f.jpg"] },
-
-  { id: "Mila Foster", name: "Mila Foster", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/q3jmj3rt/e78a1e5d9cc69d90a63919b1123dceca-f.jpg"] },
-
-  { id: "Cora Wells", name: "Cora Wells", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/7tcjY16N/fa179555040c19ae399cc56dd0e30e42-f.jpg"] },
-
-
-
-  { id: "Tessa Monroe", name: "Tessa Monroe", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/pBbVjh9t/SAVE-20260913-172110.jpg"] },
-
-  { id: "Kira Bennett", name: "Kira Bennett", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/MyLLsV9T/SAVE-20260913-172029.jpg"] },
-
-  { id: "Lila Mercer", name: "Lila Mercer", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/zhSc8tV6/SAVE-20260913-172525.jpg"] },
-
-  { id: "Nina Hayes", name: "Nina Hayes", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/N2ZzRb9w/SAVE-20260913-172502.jpg"] },
-
-  { id: "Zara Collins", name: "Zara Collins", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/0ybtvybz/SAVE-20260913-172338.jpg"] },
-
-  { id: "Elle Parker", name: "Elle Parker", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/21mnYYRb/SAVE-20260913-172357.jpg"] },
-
-  { id: "Cora Wells", name: "Cora Wells", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/Q775133v/SAVE-20260913-172428.jpg"] },
-
-  { id: "Mila Foster", name: "Mila Foster", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/9kQg326R/SAVE-20260913-172442.jpg"] },
-
-  { id: "Aria Vaughn", name: "Aria Vaughn", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/HLq8t9Tz/SAVE-20260913-172326.jpg"] },
-
-  { id: "Rhea Brooks", name: "Rhea Brooks", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/HDdFVG3H/SAVE-20260913-172310.jpg"] },
-
-  { id: "Lana Ellis", name: "Lana Ellis", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/RFfJkkY/SAVE-20260913-172155.jpg"] },
-
-  { id: "Maya Rhodes", name: "Maya Rhodes", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/Q7CH1gjX/SAVE-20260913-172135.jpg"] },
-
-  { id: "Sia Harper", name: "Sia Harper", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/Wpz1bQ2F/SAVE-20260913-172815.jpg"] },
-
-  { id: "Vera Sutton", name: "Vera Sutton", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/Xfyzx5dg/SAVE-20260913-172804.jpg"] },
-
-  { id: "Nia Lawson", name: "Nia Lawson", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/8n37N724/SAVE-20260913-172754.jpg"] },
-
-  { id: "Kyla Reed", name: "Kyla Reed", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/qFWHpJPc/SAVE-20260913-172740.jpg"] },
-
-  { id: "Gia Palmer", name: "Gia Palmer", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/wrc2D1BT/SAVE-20260913-172616.jpg"] },
-
-  { id: "Lena Walsh", name: "Lena Walsh", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/qMxDd8TT/SAVE-20260913-172635.jpg"] },
-
-  { id: "Ayla Grant", name: "Ayla Grant", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/5Xtr2mrf/SAVE-20260913-172650.jpg"] },
-
-  { id: "Mira Blake", name: "Mira Blake", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/PGvWr6vj/SAVE-20260913-172716.jpg"] },
-
-
-
-  { id: "Jada Flynn", name: "Jada Flynn", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/3mqgdX2Q/SAVE-20260913-172551.jpg"] },
-
-  { id: "Rina Cole", name: "Rina Cole", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/zCtcTfy/SAVE-20260913-172538.jpg"] },
-
-  { id: "Skye Morris", name: "Skye Morris", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/pBDb0HG3/SAVE-20260913-173137.jpg"] },
-
-  { id: "Demi Quinn", name: "Demi Quinn", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/NddJjn0x/SAVE-20260913-173150.jpg"] },
-
-  { id: "Esme Carter", name: "Esme Carter", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/Kcbx3x8v/SAVE-20260913-173201.jpg"] },
-
-  { id: "Lyra Banks", name: "Lyra Banks", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/WNdBBFZZ/SAVE-20260913-173117.jpg"] },
-
-  { id: "Kaia Hayes", name: "Kaia Hayes", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/BK44hgsn/SAVE-20260913-173056.jpg"] },
-
-  { id: "Remi Wells", name: "Remi Wells", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/GDhhvQD/SAVE-20260913-172933.jpg"] },
-
-  { id: "Lacy Ford", name: "Lacy Ford", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/fVsCfQyv/SAVE-20260913-172828.jpg"] },
-
-  { id: "Kira Mason", name: "Kira Mason", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/WW4f12TH/SAVE-20260913-172840.jpg"] },
-
-  { id: "Tori Lane", name: "Tori Lane", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/dJbSMbw8/SAVE-20260913-172853.jpg"] },
-
-  { id: "Nina Chase", name: "Nina Chase", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/SYL7KvT/SAVE-20260913-172912.jpg"] },
-
-  { id: "Cami Reed", name: "Cami Reed", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/b5HqChd7/IMG-20260913-015654-380.jpg"] },
-
-  { id: "Lyla Dean", name: "Lyla Dean", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/20Kf6ZR8/IMG-20260913-015654-303.jpg"] },
-
-  { id: "Roxy Ellis", name: "Roxy Ellis", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/6c7wcTcK/IMG-20260913-015654-952.jpg"] },
-
-  { id: "Zara Miles", name: "Zara Miles", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/kgXMtGY6/IMG-20260913-015654-591.jpg"] },
-
-  { id: "Nola Grant", name: "Nola Grant", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/zhdWwCPL/IMG-20260913-015654-254.jpg"] },
-
-  { id: "Sera Brooks", name: "Sera Brooks", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/bgDjcNGt/IMG-20260913-015654-138.jpg"] },
-
-  { id: "Mina Clark", name: "Mina Clark", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/sdrwWhLM/SAVE-20260913-173336.jpg"] },
-
-  { id: "Faye Morgan", name: "Faye Morgan", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/Mx2xkrsy/SAVE-20260913-173301.jpg"] },
-
-  { id: "Eden Ross", name: "Eden Ross", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/tTMNxVj0/SAVE-20260913-173127.jpg"] },
-
-  { id: "Iris Blake", name: "Iris Blake", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/wFwPzdTT/SAVE-20260913-173220.jpg"] },
-
-  { id: "Jade Mercer", name: "Jade Mercer", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/NdBVd7Hf/a2541ff742e11b0a741523c50fdc2c7a-f.jpg"] },
-
-  { id: "Cleo Banks", name: "Cleo Banks", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/8kNdzZF/1785920451.webp"] },
-
-  { id: "Luna Wells", name: "Luna Wells", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/yn1FTtcL/IMG-5440.jpg"] },
-
-  { id: "Ruby Flynn", name: "Ruby Flynn", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/WvFsF6hT/hornyafricangirl-1785919440.webp"] },
-
-  { id: "Macy Vaughn", name: "Macy Vaughn", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/TMDM4wgd/fc0b253c76096a464c0a26fb3d62ec20-f.jpg"] },
-
-  { id: "Kelsi Reed", name: "Kelsi Reed", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/60VQvVQ0/ce1461c2bfdcbb26865a8ac46edee9c2-f.jpg"] },
-
-  { id: "Alix Parker", name: "Alix Parker", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/5PyVRxV/b406d3fdbd38db5e8b99176d2e26b1d5-f.jpg"] },
-
-  { id: "Brynn Cole", name: "Brynn Cole", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/zh994qnw/a9aa2f31440b8c5055616b7ee81b87a3-f.jpg"] },
-
-  { id: "Sage Collins", name: "Sage Collins", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/ymMMHHPW/78699249-007-96a8.jpg"] },
-
-  { id: "Wren Foster", name: "Wren Foster", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/7tBYhCPW/c65fe4c4118c872733c66148676fae39-f.jpg"] },
-
-  { id: "Rory Hayes", name: "Rory Hayes", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/YwwXvrQ/b8670a11875885e18d887fcf3ab34cfd-f.jpg"] },
-
-  { id: "Remy Lawson", name: "Remy Lawson", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/rRDCJZGC/665a6e626c3f49a5a89e86e185fc5da4-f.jpg"] },
-
-  { id: "Leni Brooks", name: "Leni Brooks", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/kg2xb3XF/1929a9bcc61e0e147fca3a7fcc43d0d0-f.jpg"] },
-
-  { id: "Kaia Mercer", name: "Kaia Mercer", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/gZ8jGqCz/9f38e743a79deee6ef563b433ab0c564-f.jpg"] },
-
-  { id: "Naya Ellis", name: "Naya Ellis", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/1fmGCLq0/9d23d97e5262a1412a8d8d545a39185b-f.jpg"] },
-
-  { id: "Taya Grant", name: "Taya Grant", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/Qvj0r6Km/9ce6324753b4ad03597c29bc3315ce1e-f.jpg"] },
-
-  { id: "Zoya Reed", name: "Zoya Reed", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/nN0hY49X/9ba4669d1244eee48618a2125ebc1d47-f.jpg"] },
-
-  { id: "Mira Sutton", name: "Mira Sutton", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/60Ssbbm4/1c7505aeb5144e63dd03885105fcbe71-f.jpg"] }
-
-
+                { id: "Juno Clark", name: "Juno Clark", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "",images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Rose Mery", name: "Rose Mery", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Mellissa Rose", name: "Mellissa Rose", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Emily Chloe", name: "Emily Chloe", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Eva Quinn", name: "Eva Quinn", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Natalia Hannah", name: "Natalia Hannah", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+
+                { id: "Juno Clark", name: "Juno Clark", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "",images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Rose Mery", name: "Rose Mery", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Mellissa Rose", name: "Mellissa Rose", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Emily Chloe", name: "Emily Chloe", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Eva Quinn", name: "Eva Quinn", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Natalia Hannah", name: "Natalia Hannah", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+
+                { id: "Juno Clark", name: "Juno Clark", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "",images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Rose Mery", name: "Rose Mery", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Mellissa Rose", name: "Mellissa Rose", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Emily Chloe", name: "Emily Chloe", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Eva Quinn", name: "Eva Quinn", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] },
+                { id: "Natalia Hannah", name: "Natalia Hannah", url: "https://sites.google.com/view/about-us-69/home", details: "", icon: "", images: ["https://plus.unsplash.com/premium_photo-1770310908404-4fecf6e0c3de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDY1fHx8ZW58MHx8fHx8"] }
             ],
 
             tickerItems: [
@@ -1768,22 +1594,16 @@
 
         function initializeThemeSystem() {
             const toggleBtn = document.getElementById("themeToggleBtn");
-            if (!toggleBtn) return;
             const sun = toggleBtn.querySelector(".sun-icon");
             const moon = toggleBtn.querySelector(".moon-icon");
             localStorage.removeItem("CHRONICLE_THEME");
-            let activeTheme = document.documentElement.getAttribute("data-theme") || "dark";
+            let activeTheme = "dark";
 
             function applyTheme(target) {
                 document.documentElement.setAttribute("data-theme", target);
                 localStorage.setItem("CHRONICLE_THEME", target);
-                if (target === "dark") { 
-                    if(sun) sun.style.display = "block"; 
-                    if(moon) moon.style.display = "none"; 
-                } else { 
-                    if(sun) sun.style.display = "none"; 
-                    if(moon) moon.style.display = "block"; 
-                }
+                if (target === "dark") { sun.style.display = "block"; moon.style.display = "none"; }
+                else { sun.style.display = "none"; moon.style.display = "block"; }
             }
             applyTheme(activeTheme);
             toggleBtn.addEventListener("click", () => {
@@ -1802,6 +1622,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Apply theme, date, news ticker, etc.
             initializeThemeSystem();
             initializeCalendarEngine();
             initializeTicker();
@@ -1830,25 +1651,12 @@
         //]]>
     </script>
     
-    <!-- External Ads Loader -->
-    <script>
-        function loadExternalAds() {
-            const scripts = [
-                "https://pl31344698.profitableratecpmnetwork.com/d5/cc/1c/d5cc1ca9a7219e70060e7eb10be50e86.js",
-                "https://pl31344696.profitableratecpmnetwork.com/4c/3f/6f/4c3f6fb5039e94ed3e4c305915510f6e.js"
-            ];
-            
-            scripts.forEach(src => {
-                const s = document.createElement('script');
-                s.src = src;
-                s.async = true;
-                document.body.appendChild(s);
-            });
-        }
+    <!-- ============================================================== -->
+    <!-- 🟢 PLACE YOUR POPUNDER AND SOCIAL BAR AD SCRIPT CODES HERE 🟢 -->
+    <!-- ============================================================== -->
 
-        if (localStorage.getItem("identityVerified") === "true") {
-            loadExternalAds();
-        }
-    </script>
+<script src="https://pl31344698.profitableratecpmnetwork.com/d5/cc/1c/d5cc1ca9a7219e70060e7eb10be50e86.js"></script>
+
+    <script src="https://pl31344696.profitableratecpmnetwork.com/4c/3f/6f/4c3f6fb5039e94ed3e4c305915510f6e.js"></script>
 </body>
 </html>

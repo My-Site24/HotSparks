@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://i.ibb.co.com">
     <link rel="dns-prefetch" href="https://i.ibb.co.com">
 
-    <!-- TailwindCSS CDN (Preflight disabled to protect your existing custom CSS) -->
+    <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -21,6 +21,14 @@
           preflight: false,
         }
       }
+    </script>
+
+    <!-- Instant Theme Loader (Fixes Delay & Flicker on Page Load) -->
+    <script>
+      (function() {
+        var savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
     </script>
 
     <style>
@@ -40,8 +48,7 @@
             --radius-sm: 10px;
             --radius-md: 20px;
             --radius-lg: 35px;
-            --radius-square: 0px; 
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
@@ -58,616 +65,164 @@
             --glass-shadow: 0 15px 45px -10px rgba(0, 0, 0, 0.4);
         }
 
+        /* Fast Theme Switching Optimization */
+        body, header, .glass, .glass-solid, .category-card, .search-input, .profile-card-glass {
+            transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
+        }
+
         /* --- BASE STYLES --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-sans);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 5% 10%, rgba(99, 102, 241, 0.04) 0%, transparent 35%),
-                              radial-gradient(circle at 95% 80%, rgba(236, 72, 153, 0.04) 0%, transparent 35%);
-            background-attachment: fixed;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg-base); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at 5% 10%, rgba(99, 102, 241, 0.04) 0%, transparent 35%), radial-gradient(circle at 95% 80%, rgba(236, 72, 153, 0.04) 0%, transparent 35%); background-attachment: fixed; }
         a { text-decoration: none; color: inherit; }
-        button { cursor: pointer; border: none; background: none; outline: none; transition: var(--transition-smooth); }
+        button { cursor: pointer; border: none; background: none; outline: none; }
         img { max-width: 100%; height: auto; display: block; object-fit: cover; }
 
-        .container {
-            width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .glass {
-            background: var(--bg-surface);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--border-color);
-            box-shadow: var(--glass-shadow);
-        }
-
-        .glass-solid {
-            background: var(--bg-surface-solid);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--glass-shadow);
-            transition: var(--transition-smooth);
-        }
+        .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 24px; }
+        .glass { background: var(--bg-surface); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+        .glass-solid { background: var(--bg-surface-solid); border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
 
         /* --- HEADER --- */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100000; /* Updated: Ensures header stays above the loading overlay */
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-        }
-
-        .header-left {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .header-site-links, .footer-site-links {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            flex-wrap: wrap;
-        }
-        
-        .header-site-links a, .footer-site-links a { 
-            transition: var(--transition-smooth); 
-            display: inline-block;
-        }
-        .header-site-links a:hover, .footer-site-links a:hover { 
-            color: var(--accent-primary); 
-            transform: translateX(3px); 
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: -1.5px;
-            background: linear-gradient(to right, var(--accent-primary), #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
+        header { position: sticky; top: 0; z-index: 100000; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+        .header-left { display: flex; flex-direction: column; gap: 8px; }
+        .header-site-links, .footer-site-links { display: flex; gap: 12px; font-size: 12px; font-weight: 600; color: var(--text-muted); flex-wrap: wrap; }
+        .header-site-links a, .footer-site-links a { transition: var(--transition-smooth); display: inline-block; }
+        .header-site-links a:hover, .footer-site-links a:hover { color: var(--accent-primary); transform: translateX(3px); }
+        .logo { font-size: 26px; font-weight: 900; letter-spacing: -1.5px; background: linear-gradient(to right, var(--accent-primary), #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 10px; cursor: pointer; }
 
         /* --- AUTH BUTTONS --- */
-        .auth-buttons {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        .btn-login, .btn-signup {
-            padding: 10px 20px;
-            border-radius: var(--radius-lg);
-            font-weight: 800;
-            font-size: 13px;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: inline-block;
-            text-align: center;
-        }
-        .btn-login {
-            background: linear-gradient(135deg, #06b6d4, #3b82f6);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
-        .btn-signup {
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-        }
-        .btn-login:hover, .btn-signup:hover {
-            transform: translateY(-3px);
-            filter: brightness(1.1);
-        }
-
-        .date-engine {
-            display: flex;
-            flex-direction: column;
-            text-align: right;
-            line-height: 1.2;
-            border-left: 3px solid var(--accent-primary);
-            padding-left: 12px;
-        }
-
+        .auth-buttons { display: flex; gap: 12px; align-items: center; }
+        .btn-login, .btn-signup { padding: 10px 20px; border-radius: var(--radius-lg); font-weight: 800; font-size: 13px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; transition: transform 0.3s, box-shadow 0.3s; display: inline-block; text-align: center; }
+        .btn-login { background: linear-gradient(135deg, #06b6d4, #3b82f6); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        .btn-signup { background: linear-gradient(135deg, #ec4899, #8b5cf6); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
+        .btn-login:hover, .btn-signup:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .date-engine { display: flex; flex-direction: column; text-align: right; line-height: 1.2; border-left: 3px solid var(--accent-primary); padding-left: 12px; }
         .date-day { font-size: 14px; font-weight: 800; color: var(--accent-primary); text-transform: uppercase; }
         .date-full { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
-
         .header-controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .theme-toggle {
-            width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--border-color);
-        }
+        .theme-toggle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); }
 
         /* --- BREAKING NEWS TICKER --- */
-        .ticker-wrapper {
-            display: flex;
-            align-items: center;
-            background: var(--bg-surface-solid);
-            border: 0.5px solid var(--accent-primary); 
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            margin-bottom: 24px;
-            box-shadow: 0 0 15px rgba(129, 140, 248, 0.25), var(--glass-shadow);             height: 44px;
-        }
-
-        .ticker-title {
-            background: linear-gradient(135deg, #ef4444, #b91c1c);
-            color: #ffffff;
-            padding: 0 06px; /* পাশের প্যাডিং কমানো হয়েছে */
-            height: 100%;
-            display: flex;
-            align-items: center;
-            font-weight: 800;
-            text-transform: uppercase;
-            font-size: 14px; /* ফন্ট সাইজ ছোট করা হয়েছে */
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-            z-index: 5;
-        }
-
-        .ticker-text-wrapper {
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-
-        .ticker-text-move {
-            display: inline-flex;
-            white-space: nowrap;
-            padding-left: 100%;
-            animation: tickerMove 45s linear infinite;
-            will-change: transform;
-        }
-
-        .ticker-item {
-            padding-right: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-        }
+        .ticker-wrapper { display: flex; align-items: center; background: var(--bg-surface-solid); border: 0.5px solid var(--accent-primary); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 24px; box-shadow: 0 0 15px rgba(129, 140, 248, 0.25), var(--glass-shadow); height: 44px; }
+        .ticker-title { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #ffffff; padding: 0 06px; height: 100%; display: flex; align-items: center; font-weight: 800; text-transform: uppercase; font-size: 14px; letter-spacing: 0.3px; white-space: nowrap; z-index: 5; }
+        .ticker-text-wrapper { overflow: hidden; display: flex; align-items: center; flex-grow: 1; }
+        .ticker-text-move { display: inline-flex; white-space: nowrap; padding-left: 100%; animation: tickerMove 45s linear infinite; will-change: transform; }
+        .ticker-item { padding-right: 40px; font-size: 14px; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; }
         .ticker-item::before { content: "•"; margin-right: 14px; color: #ef4444; font-size: 18px; }
-
-        @keyframes tickerMove {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
+        @keyframes tickerMove { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
         .ticker-text-wrapper:hover .ticker-text-move { animation-play-state: paused; }
 
-        /* Headline Banner */
         .center-headline-container { text-align: center; margin: 25px 0; }
-        .center-headline {
-            font-size: 36px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.2;
-            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px;
-        }
+        .center-headline { font-size: 36px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.2; background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
 
-        /* --- AD CONTAINERS (UPDATED TO PREVENT LAYOUT BREAKING) --- */
-        .ad-container {
-            margin: 20px auto; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            width: 100%; 
-            max-width: 100%; 
-            min-height: 90px;
-            border: 1px dashed var(--border-color); 
-            background: rgba(148, 163, 184, 0.02);
-            border-radius: var(--radius-sm); 
-            position: relative; 
-            overflow: hidden; /* Prevent child codes from breaking UI */
-            box-sizing: border-box;
-        }
-        
-        .ad-container iframe, 
-        .ad-container ins, 
-        .ad-container > div {
-            max-width: 100% !important; /* Force injected ads to respect bounds */
-        }
+        .ad-container { margin: 20px auto; display: flex; justify-content: center; align-items: center; width: 100%; max-width: 100%; min-height: 90px; border: 1px dashed var(--border-color); background: rgba(148, 163, 184, 0.02); border-radius: var(--radius-sm); position: relative; overflow: hidden; box-sizing: border-box; }
+        .ad-container iframe, .ad-container ins, .ad-container > div { max-width: 100% !important; }
 
-        .section-title {
-            font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-            margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
-            color: var(--text-primary);
-        }
+        .section-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; color: var(--text-primary); }
         .section-title::after { content: ''; flex-grow: 1; height: 1px; background: var(--border-color); }
 
-        /* --- SEARCH BAR --- */
-        .search-container {
-            margin-bottom: 30px;
-            width: 100%;
-            max-width: 300px;
-            margin-left: 0; 
-            position: relative;
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            fill: var(--text-muted);
-            pointer-events: none;
-        }
+        .search-container { margin-bottom: 30px; width: 100%; max-width: 300px; margin-left: 0; position: relative; }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; fill: var(--text-muted); pointer-events: none; }
+        .search-input { width: 100%; padding: 12px 20px 12px 44px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); background: var(--bg-surface-solid); color: var(--text-primary); font-size: 15px; font-weight: 500; box-shadow: var(--glass-shadow); outline: none; }
+        .search-input:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
 
-        .search-input {
-            width: 100%;
-            padding: 12px 20px 12px 44px;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            background: var(--bg-surface-solid);
-            color: var(--text-primary);
-            font-size: 15px;
-            font-weight: 500;
-            box-shadow: var(--glass-shadow);
-            transition: var(--transition-smooth);
-            outline: none;
-        }
+        .category-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 20px; }
+        .category-card { position: relative; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); background: var(--bg-surface-solid); display: flex; flex-direction: column; width: 100%; height: 100%; text-decoration: none; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .category-card:hover { z-index: 10; transform: translateY(-5px); box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3); }
 
-        .search-input:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
-        }
+        .pagination-container { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 40px 0; flex-wrap: wrap; }
+        .page-num, .page-next { background: var(--bg-surface-solid); border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px 16px; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; transition: transform 0.2s ease, background-color 0.2s ease; box-shadow: var(--glass-shadow); font-size: 14px; }
+        .page-num:hover, .page-next:hover { background: var(--accent-primary); color: #ffffff; border-color: var(--accent-primary); transform: translateY(-2px); }
+        .page-num.active { background: var(--accent-primary); color: #ffffff; border-color: var(--accent-primary); cursor: default; transform: none; }
+        .page-next { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: none; }
 
-        /* --- GRID DESIGN --- */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        /* Card */
-        .category-card {
-            position: relative;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--glass-shadow);
-            background: var(--bg-surface-solid);
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
-
-        .category-card:hover {
-            z-index: 10;
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);
-        }
-
-        /* --- PAGINATION STYLES --- */
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-        .page-num, .page-next {
-            background: var(--bg-surface-solid);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 10px 16px;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            box-shadow: var(--glass-shadow);
-            font-size: 14px;
-        }
-        .page-num:hover, .page-next:hover {
-            background: var(--accent-primary);
-            color: #ffffff;
-            border-color: var(--accent-primary);
-            transform: translateY(-2px);
-        }
-        .page-num.active {
-            background: var(--accent-primary);
-            color: #ffffff;
-            border-color: var(--accent-primary);
-        }
-        .page-next {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: #ffffff;
-            border: none;
-        }
-
-        /* --- SLIDESHOW STYLES --- */
-        .slideshow-container {
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            background-color: #0f172a; 
-            display: grid;
-            aspect-ratio: 4 / 5; 
-            cursor: pointer;
-        }
-
-        .slide-image {
-            grid-area: 1 / 1;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: scale(1);
-            will-change: opacity, transform;
-        }
-        
-        .slide-image.active {
-            opacity: 1;
-            transform: scale(1.05);
-            z-index: 1;
-        }
-
-        .category-content { 
-            position: absolute; 
-            bottom: 0; left: 0; right: 0; 
-            padding: 40px 15px 15px 15px; 
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 60%, rgba(15, 23, 42, 0) 100%);
-            z-index: 3; 
-            pointer-events: none;
-        }
-
-        /* Active Dot & Title Styles */
-        .active-status-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-        
-        .category-title-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 4px;
-        }
-        
-        .active-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background-color: #22c55e;
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(14, 165, 233, 0.8);
-            animation: pulse-dot 1s infinite;
-        }
-        
-        .active-text {
-            color: #22c55e;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        @keyframes pulse-dot {
-            0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(14, 165, 233, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
-        }
-        
+        .slideshow-container { width: 100%; position: relative; overflow: hidden; background-color: #0f172a; display: grid; aspect-ratio: 4 / 5; cursor: pointer; }
+        .slide-image { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1); transform: scale(1); will-change: opacity, transform; }
+        .slide-image.active { opacity: 1; transform: scale(1.05); z-index: 1; }
+        .category-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 15px 15px 15px; background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 60%, rgba(15, 23, 42, 0) 100%); z-index: 3; pointer-events: none; }
+        .active-status-wrapper { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .category-title-wrapper { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .active-dot { display: inline-block; width: 10px; height: 10px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 8px rgba(14, 165, 233, 0.8); animation: pulse-dot 1s infinite; }
+        .active-text { color: #22c55e; font-size: 14px; font-weight: 700; letter-spacing: 0.3px; }
+        @keyframes pulse-dot { 0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(14, 165, 233, 0); } 100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); } }
         .category-icon { font-size: 16px; }
         .category-title { font-size: 17px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-        
-        .category-details {
-            font-size: 11px;
-            color: #cbd5e1;
-            font-weight: 500;
-            padding-left: 14px;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+        .category-details { font-size: 11px; color: #cbd5e1; font-weight: 500; padding-left: 14px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* --- UPDATED CARD ACTION BUTTONS --- */
-        .card-action-buttons {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 6px;
-            background: var(--bg-surface-solid);
-            border-top: 1px solid var(--border-color);
-            position: relative;
-            z-index: 5;
-        }
+        .card-action-buttons { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 5px; padding: 8px 6px; background: var(--bg-surface-solid); border-top: 1px solid var(--border-color); position: relative; z-index: 5; }
+        .card-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 2px; padding: 5px 2px; border-radius: 6px; font-weight: 700; font-size: 9px; color: #ffffff; letter-spacing: 0.1px; text-transform: uppercase; white-space: nowrap; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease, box-shadow 0.3s ease; border: none; cursor: pointer; }
+        .card-btn svg { width: 10px; height: 10px; flex-shrink: 0; }
+        .card-btn:hover { transform: translateY(-4px) scale(1.05); filter: brightness(1.2); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); z-index: 10; }
 
-        .card-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-            padding: 5px 2px; /* মোবাইল ভিউয়ের জন্য প্যাডিং কমানো হয়েছে */
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 9px; /* ফন্ট সাইজ ছোট করা হয়েছে যাতে সহজেই জায়গা নেয় */
-            color: #ffffff;
-            letter-spacing: 0.1px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .card-btn svg { 
-            width: 10px; 
-            height: 10px; 
-            flex-shrink: 0; 
-        }
-
-        .card-btn:hover {
-            transform: translateY(-4px) scale(1.05);
-            filter: brightness(1.2);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-            z-index: 10;
-        }
-
-        /* --- FOOTER NETWORK HUB --- */
         .footer-wrapper { padding: 30px 0; border-top: 1px solid var(--border-color); margin-top: 5px; }
         .footer-container { display: grid; grid-template-columns: 1fr; text-align: center; gap: 24px; }
         .footer-left { font-size: 13px; color: var(--text-muted); grid-row: 2; }
         .footer-right-hub { display: flex; flex-direction: column; align-items: center; gap: 10px; grid-row: 1; }
-        
         .hub-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.8px; }
         .hub-networks-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 400px; }
-        .network-item {
-            width: 34px; height: 34px; border-radius: 50%; background: var(--bg-surface-solid);
-            border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
-            box-shadow: var(--glass-shadow); transition: var(--transition-smooth);
-        }
-        .network-item:hover { 
-            transform: translateY(-5px) scale(1.15); 
-            border-color: var(--accent-primary); 
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4); 
-        }
+        .network-item { width: 34px; height: 34px; border-radius: 50%; background: var(--bg-surface-solid); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; box-shadow: var(--glass-shadow); transition: transform 0.2s ease, border-color 0.2s ease; }
+        .network-item:hover { transform: translateY(-5px) scale(1.15); border-color: var(--accent-primary); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4); }
         .network-item img { width: 18px; height: 18px; }
 
-        .back-to-top {
-            position: fixed; bottom: 30px; right: 24px; width: 46px; height: 46px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; z-index: 90; color: var(--text-primary);
-        }
+        .back-to-top { position: fixed; bottom: 30px; right: 24px; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 90; color: var(--text-primary); transition: opacity 0.3s ease, visibility 0.3s ease; }
         .back-to-top.visible { opacity: 1; visibility: visible; }
 
-        /* --- RESPONSIVE ENGINE --- */
         @media(max-width: 1400px) { .category-grid { grid-template-columns: repeat(4, 1fr); } }
-        @media(max-width: 1024px) {
-            .center-headline { font-size: 30px; }
-            .category-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media(max-width: 768px) {
-            .center-headline { font-size: 24px; }
-            .header-top { flex-direction: column; gap: 12px; }
-            .header-left { align-items: center; text-align: center; }
-            .header-site-links { justify-content: center; }
-            .header-controls { justify-content: center; width: 100%; }
-            .date-engine { text-align: center; border-left: none; padding-left: 0; }
-            .category-grid { grid-template-columns: repeat(2, 1fr); }
-            .search-container { margin-left: auto; margin-right: auto; max-width: 100%; }
-        }
+        @media(max-width: 1024px) { .center-headline { font-size: 30px; } .category-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media(max-width: 768px) { .center-headline { font-size: 24px; } .header-top { flex-direction: column; gap: 12px; } .header-left { align-items: center; text-align: center; } .header-site-links { justify-content: center; } .header-controls { justify-content: center; width: 100%; } .date-engine { text-align: center; border-left: none; padding-left: 0; } .category-grid { grid-template-columns: repeat(2, 1fr); } .search-container { margin-left: auto; margin-right: auto; max-width: 100%; } }
         @media(max-width: 480px) { .category-grid { grid-template-columns: repeat(1, 1fr); } }
 
-        /* --- SECOND LANDING PAGE / CUSTOM LOADING OVERLAY CSS --- */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(9, 13, 22, 0.94);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 99999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+        /* ============================================================== */
+        /* --- NEW PROFILE DETAILS PAGE CSS (SECOND LANDING PAGE) --- */
+        /* ============================================================== */
+        #profileDetailsPage { display: none; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .loading-content-box {
-            background: #ffffff;
-            color: #000000;
-            font-family: 'Times New Roman', sans-serif;
-            text-align: center;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            max-width: 450px;
-            width: 100%;
+        .profile-card-glass { background: var(--bg-surface-solid); border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); border-radius: var(--radius-lg); padding: 40px 20px; margin-bottom: 40px; position: relative; }
+        .back-btn-container { text-align: left; margin-bottom: 30px; }
+        .btn-back { background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: var(--radius-md); font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s ease, background-color 0.2s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-back:hover { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); transform: translateX(-5px); }
+        
+        .profile-header { text-align: center; margin-bottom: 15px; }
+        .profile-header h1 { font-size: 22px; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 800; }
+        .profile-header h2 { font-size: 38px; font-weight: 900; background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .profile-desc { text-align: center; color: var(--text-secondary); font-size: 16px; margin-bottom: 35px; font-weight: 600; line-height: 1.5; }
+        
+        /* Action Buttons Configuration */
+        .profile-buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 50px; }
+        .profile-btn { 
+            padding: 14px 28px; border-radius: var(--radius-lg); font-weight: 800; font-size: 14px; color: #fff; 
+            display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        /* ADDED ENHANCED HOVER EFFECT */
+        .profile-btn:hover { transform: translateY(-5px) scale(1.05); filter: brightness(1.15); box-shadow: 0 12px 28px rgba(0,0,0,0.3); z-index: 10; }
+        
+        .btn-fc { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+        .btn-ic { background: linear-gradient(135deg, #ff0844, #ff4e50); }
+        .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .btn-tg { background: linear-gradient(135deg, #0088cc, #00aaff); }
+        .btn-fb { background: linear-gradient(135deg, #1877F2, #3b5998); }
+        
+        /* Scrollable Clickable Images Configuration */
+        .profile-image-scroll { display: flex; flex-direction: column; gap: 25px; max-width: 650px; margin: 0 auto; }
+        .profile-image-scroll a { display: block; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid transparent; transition: transform 0.2s ease, border-color 0.2s ease; position: relative; }
+        .profile-image-scroll a::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: #fff; padding: 30px 15px 15px 15px; text-align: center; font-weight: 800; font-size: 16px; opacity: 0; transition: opacity 0.2s ease; }
+        .profile-image-scroll a:hover { transform: scale(1.03); border-color: var(--accent-primary); z-index: 10; }
+        .profile-image-scroll a:hover::after { opacity: 1; }
+        .profile-image-scroll img { width: 100%; height: auto; display: block; object-fit: cover; }
 
-        .disclaimer-desc {
-            font-size: 14px;
-            margin: 20px 0 30px 0;
-            color: #000 !important;
-            line-height: 1.5;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 6px solid #ccc;
-            border-top: 6px solid #3BA30D;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        #countdown {
-            font-size: 25px;
-            color: #ff0000;
-            font-weight: bold;
-        }
-
-        #extra-msg {
-            font-size: 15px;
-            color: #555 !important;
-            margin-top: 8px;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+/* --- LOADING OVERLAY CSS --- */
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 13, 22, 0.94); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
+.loading-overlay.active { display: flex; opacity: 1; }
+.loading-content-box { background: #ffffff; color: #000000; font-family: 'Times New Roman', sans-serif; text-align: center; padding: 40px 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); max-width: 450px; width: 100%; }
+.disclaimer-desc { font-size: 14px; margin: 20px 0 30px 0; color: #000 !important; line-height: 1.5; opacity: 1 !important; visibility: visible !important; }
+.spinner { width: 40px; height: 40px; border: 6px solid #ccc; border-top: 6px solid #3BA30D; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+#countdown { font-size: 25px; color: #ff0000; font-weight: bold; }
+#extra-msg { font-size: 15px; color: #555 !important; margin-top: 8px; opacity: 1 !important; visibility: visible !important; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
-
-    <script src="https://pl31344698.profitableratecpmnetwork.com/d5/cc/1c/d5cc1ca9a7219e70060e7eb10be50e86.js"></script>
-    
 </head>
 <body>
 
@@ -684,8 +239,8 @@
                 
                 <div class="header-controls">
                     <div class="auth-buttons">
-                        <a href="https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" id="customLoginBtn" class="btn-login">Login</a>
-                        <a href="https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" id="customSignupBtn" class="btn-signup">Create Free Account</a>
+                        <a href="#" id="customLoginBtn" class="btn-login">Login</a>
+                        <a href="#" id="customSignupBtn" class="btn-signup">Create Free Account</a>
                     </div>
 
                     <div class="date-engine">
@@ -706,7 +261,6 @@
         </div>
     </header>
 
-    <!-- NEWS TICKER -->
     <div class="container">
         <div class="ticker-wrapper">
             <div class="ticker-title">NEWS UPDATES</div>
@@ -720,177 +274,157 @@
     <div class="container">
         <div class="ad-container" id="ad-slot-1">
             <script>
-  atOptions = {
-    'key' : '5fdc9d178a2ab5a4d324b5c3e070f8c3',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highrevenueformat.com/5fdc9d178a2ab5a4d324b5c3e070f8c3/invoke.js"></script>
+              atOptions = { 'key' : '5fdc9d178a2ab5a4d324b5c3e070f8c3', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script src="https://www.highrevenueformat.com/5fdc9d178a2ab5a4d324b5c3e070f8c3/invoke.js"></script>
         </div>
     </div>
 
-    <div class="center-headline-container">
-        <h1 class="center-headline">"Connect Instantly. Live Chat Freely. Meet Real❤️ People Live."</h1>
-        <p style="color: var(--text-secondary); font-weight: 500; font-size: 14px;">💬 Enjoy real-time conversations with verified members in a friendly environment. Meet new people and create meaningful connections.</p>
-    </div>
-
     <main class="container">
+        <!-- FIRST LANDING PAGE -->
         <div id="homeLandingPage">
+            <div class="center-headline-container">
+                <h1 class="center-headline">"Connect Instantly. Live Chat Freely. Meet Real❤️ People Live."</h1>
+                <p style="color: var(--text-secondary); font-weight: 500; font-size: 14px;">💬 Enjoy real-time conversations with verified members in a friendly environment. Meet new people and create meaningful connections.</p>
+            </div>
+
             <h2 class="section-title">Available Live Free</h2>
             
             <div class="search-container">
-                <svg class="search-icon" viewBox="0 0 24 24">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                </svg>
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
                 <input type="text" id="searchInput" class="search-input" placeholder="Search Name...">
             </div>
 
             <div class="category-grid" id="grid-part-1"></div>
             
-
-
-
-            <!-- BANNER AD SLOT 2 -->
             <div class="ad-container" id="ad-slot-2">
                 <script>
-                atOptions = {
-                    'key' : '5fdc9d178a2ab5a4d324b5c3e070f8c3',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
+                atOptions = { 'key' : '5fdc9d178a2ab5a4d324b5c3e070f8c3', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
                 </script>
                 <script src="https://www.highrevenueformat.com/5fdc9d178a2ab5a4d324b5c3e070f8c3/invoke.js"></script>
             </div>
 
             <div class="category-grid" id="grid-part-2"></div>
             
-
-
-
-
-            <!-- BANNER AD SLOT 3 -->
             <div class="ad-container" id="ad-slot-3">
                 <script async="async" data-cfasync="false" src="https://pl31344697.profitableratecpmnetwork.com/4f93d9ff6744bf412b640d11a9aa15b8/invoke.js"></script>
             </div>
 
             <div class="category-grid" id="grid-part-3"></div>
 
-
-
-
-
-
-
-            <!-- BANNER AD SLOT 4 -->
             <div class="ad-container" id="ad-slot-4">
                 <script>
-  atOptions = {
-    'key' : 'e28ea51bae2f417a462ca441de59aea2',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highrevenueformat.com/e28ea51bae2f417a462ca441de59aea2/invoke.js"></script>
-                <div id="container-a42710cbc275532005aa72c80ea3aa31"></div>
+                  atOptions = { 'key' : 'e28ea51bae2f417a462ca441de59aea2', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script src="https://www.highrevenueformat.com/e28ea51bae2f417a462ca441de59aea2/invoke.js"></script>
             </div>
 
             <div class="category-grid" id="grid-part-4"></div>
             
-
-
-
-
-
-
-            <!-- BANNER AD SLOT 5 -->
             <div class="ad-container" id="ad-slot-5">
                 <script async="async" data-cfasync="false" src="https://pl31344697.profitableratecpmnetwork.com/4f93d9ff6744bf412b640d11a9aa15b8/invoke.js"></script>
-
             </div>
 
             <div class="category-grid" id="grid-part-5"></div>
             
-
-
-
-
-
-
-            <!-- BANNER AD SLOT 6 -->
             <div class="ad-container" id="ad-slot-6">
                 <script>
-  atOptions = {
-    'key' : '27b3e309b94bccd3b1dec60ef2bcaa1b',
-    'format' : 'iframe',
-    'height' : 60,
-    'width' : 468,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highrevenueformat.com/27b3e309b94bccd3b1dec60ef2bcaa1b/invoke.js"></script>
+                  atOptions = { 'key' : '27b3e309b94bccd3b1dec60ef2bcaa1b', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };
+                </script>
+                <script src="https://www.highrevenueformat.com/27b3e309b94bccd3b1dec60ef2bcaa1b/invoke.js"></script>
             </div>
 
             <div class="category-grid" id="grid-part-6"></div>
 
-
-
-
-
-
-
-
-            <!-- BANNER AD SLOT 7 -->
             <div class="ad-container" id="ad-slot-7">
                 <script>
-                atOptions = {
-                    'key' : '5fdc9d178a2ab5a4d324b5c3e070f8c3',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
+                atOptions = { 'key' : '5fdc9d178a2ab5a4d324b5c3e070f8c3', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
                 </script>
                 <script src="https://www.highrevenueformat.com/5fdc9d178a2ab5a4d324b5c3e070f8c3/invoke.js"></script>
             </div>
 
             <div class="category-grid" id="grid-part-7"></div>
-            
             <div id="paginationPipeline" class="pagination-container"></div>
+        </div>
+        
+        <!-- SECOND LANDING PAGE (PROFILE DETAILS) -->
+        <div id="profileDetailsPage">
+            <div class="profile-card-glass">
+                <div class="back-btn-container">
+                    <button class="btn-back" onclick="closeProfilePage()">
+                        <svg style="width:16px; height:16px; fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg> Back
+                    </button>
+                </div>
+                
+                <div class="profile-header">
+                    <h1>My Profile Details</h1>
+                    <h2 id="pdNameDisplay">Profile Name</h2>
+                </div>
+                
+                <p class="profile-desc">
+                    ✅ 100% Verified Profile.<br>
+                    Currently online and ready to connect. Connect instantly for a private and secure conversation.
+                </p>
+                
+                <!-- Action Buttons Modified for Dynamic Loading Config -->
+                <div class="profile-buttons">
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('freeChat')" class="profile-btn btn-fc">
+                        <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg> Free Chat
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('inCall')" class="profile-btn btn-ic">
+                        <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> In Call
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('whatsapp')" class="profile-btn btn-wa">
+                        <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 6.46 17.5 2 12.04 2Z"/></svg> WhatsApp
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('telegram')" class="profile-btn btn-tg">
+                        <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.06-.2-.07-.06-.17-.04-.25-.02-.11.02-1.78 1.14-5.06 3.34-.48.33-.92.49-1.32.48-.43-.01-1.26-.24-1.87-.44-.75-.24-1.34-.37-1.29-.79.03-.22.33-.44.89-.69 3.47-1.52 5.79-2.52 6.95-3.01 3.3-1.39 3.99-1.64 4.44-1.65.1 0 .32.02.46.12.12.09.16.22.18.34-.01.07.01.21-.01.31z"/></svg> Telegram
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('facebook')" class="profile-btn btn-fb">
+                        <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C18.34 21.21 22 17.06 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/></svg> Facebook
+                    </a>
+                </div>
+                
+                <!-- Scrollable Clickable Images Configuration Modified -->
+                <div class="profile-image-scroll">
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('imageLink1')">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop" alt="Profile View 1">
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('imageLink2')">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop" alt="Profile View 2">
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('imageLink3')">
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop" alt="Profile View 3">
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('imageLink4')">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop" alt="Profile View 4">
+                    </a>
+                    <a href="javascript:void(0)" onclick="handleProfileBtnClick('imageLink5')">
+                        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&auto=format&fit=crop" alt="Profile View 5">
+                    </a>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- SECOND LANDING PAGE (LOADING PAGE OVERLAY) -->
-    <div id="secondLandingPage" class="loading-overlay">
-        <div class="loading-content-box">
-            <!-- HEADER -->
-            <div class="disclaimer-header">
-                <span class="header-title text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-3xl font-extrabold tracking-wide drop-shadow-md">Welcome To HotSparks!</span>
-            </div>
 
-            <!-- DESCRIPTION -->
-            <div class="disclaimer-desc">
-               * This verified profile guarantees a 100% secure and risk-free environment for authentic connections.<br>
-               * Engage confidently in private, real-time conversations with complete absolute peace of mind.
-            </div>
 
-            <!-- LOADER -->
-            <div class="spinner"></div>
-
-            <h2 id="dynamicStatus">Preparing...</h2>
-
-            <p>👉🏽 In This Only <span id="countdown">05</span> Seconds.</p>
-
-            <p id="extra-msg">Please wait...</p>
+<!-- LOADING PAGE OVERLAY (পেস্ট করার জায়গা) -->
+<div id="secondLandingPage" class="loading-overlay">
+    <div class="loading-content-box">
+        <div class="disclaimer-header">
+            <span class="header-title text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-3xl font-extrabold tracking-wide drop-shadow-md">Welcome To HotSparks!</span>
         </div>
+        <div class="disclaimer-desc">
+            * This verified profile guarantees a 100% secure and risk-free environment for authentic connections.<br>
+            * Engage confidently in private, real-time conversations with complete absolute peace of mind.
+        </div>
+        <div class="spinner"></div>
+        <h2 id="dynamicStatus">Preparing...</h2>
+        <p>👉🏽 In This Only <span id="countdown">05</span> Seconds.</p>
+        <p id="extra-msg">Please wait...</p>
     </div>
-
+</div>
     <footer class="footer-wrapper">
         <div class="container footer-container">
             <div class="footer-left">
@@ -911,25 +445,46 @@
     <script>
         //<![CDATA[
         
+        // ==========================================
+        // 🟢 ম্যানুয়াল কনফিগারেশন সেকশন (MANUAL CONFIG)
+        // ==========================================
         const USER_CONFIG = {
             personalLinks: {
                 loginLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198",
                 signupLink: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198"
             },
-            ads: {
-                enablePopunder: false,
-                popunderUrl: "https://www.effectivecpmnetwork.com/আপনার-পপআন্ডার-লিংক-এখানে"
+            
+            // সোশ্যাল মিডিয়া লিংকগুলো এখানে এডিট করুন
+            socialMediaLinks: [
+                { name: "Facebook", icon: "https://img.icons8.com/color/48/facebook-new.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
+                { name: "YouTube", icon: "https://img.icons8.com/color/48/youtube-play.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
+                { name: "TikTok", icon: "https://img.icons8.com/color/48/tiktok.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
+                { name: "Telegram", icon: "https://img.icons8.com/color/48/telegram-app.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
+                { name: "WhatsApp", icon: "https://img.icons8.com/color/48/whatsapp.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" }
+            ],
+
+            // ২য় পেজের (Profile Details) বাটন এবং ইমেজের কনফিগারেশন
+            // குறிப்பு: যেটিতে লোডিং পেজ প্রয়োজন সেখানে "useLoading: true" রাখবেন। আর সরাসরি লিংকে নিতে চাইলে "useLoading: false" দিন।
+            profileActions: {
+                freeChat: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: true, actionType: 'freeChat' },
+                inCall:   { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: true, actionType: 'inCall' },
+                whatsapp: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' },
+                telegram: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' },
+                facebook: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' },
+                
+                // স্ক্রল করা ছবিগুলোর কনফিগারেশন (সরাসরি লিংকে রিডিরেক্ট করার জন্য useLoading: false রাখা হয়েছে)
+                imageLink1: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' },
+                imageLink2: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' },
+                imageLink3: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' },
+                imageLink4: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' },
+                imageLink5: { url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", useLoading: false, actionType: 'default' }
             }
         };
+        // ==========================================
 
         const DATABASE = {
             settings: { activeText: "online" },
-            speedSettings: {
-                tickerDuration: "95s",
-                slideshowBaseSpeed: 7000, 
-                slideshowRandomDelay: 1000
-            },
-
+            speedSettings: { tickerDuration: "95s", slideshowBaseSpeed: 7000, slideshowRandomDelay: 1000 },
             sitePages: [
                 { name: "Privacy Policy", url: "https://sites.google.com/view/privacy-and-policy69/home" },
                 { name: "FAQ", url: "https://sites.google.com/view/faq9/home" },
@@ -938,9 +493,8 @@
                 { name: "About Us", url: "https://sites.google.com/view/about-us-69/home" }, 
                 { name: "Contact Us", url: "https://sites.google.com/view/contact-us-69/home" }
             ],
-
             categories: [
-{ id: "Ruth Ellis", name: "Ruth Ellis", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/pBbVjh9t/SAVE-20260913-172110.jpg"] },
+                { id: "Ruth Ellis", name: "Ruth Ellis", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/pBbVjh9t/SAVE-20260913-172110.jpg"] },
 
 { id: "Noa Bennett", name: "Noa Bennett", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/MyLLsV9T/SAVE-20260913-172029.jpg"] },
 
@@ -1110,9 +664,7 @@
 { id: "Faye Morgan", name: "Faye Morgan", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/PzzW3gWX/43010584-002-0dfd.jpg"] },
 
 { id: "Eden Ross", name: "Eden Ross", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198", details: "", icon: "", images: ["https://i.ibb.co.com/fGQt1bT4/e4ecb757beaf26e214ee2d1044d1d7d9-f.jpg"] }
-
             ],
-
             tickerItems: [
                 "Welcome to HotSparks – Hundreds of active members joining today and Enjoy seamless 24/7 live connections and real-time chat completely free.",
                 "Your privacy and data security are always our top priority. Explore newly updated profiles and stay connected instantly.",
@@ -1120,14 +672,6 @@
                 "Discover vibrant conversations and connect with like-minded individuals and Instant messaging enabled — start chatting in just one click!",
                 "Safe, respectful, and friendly environment guaranteed for all users and Experience ultra-fast load times and smooth dynamic browsing.",
                 "New interactive features are now live — check them out today!"
-            ],
-
-            socialLinks: [
-                { name: "Facebook", icon: "https://img.icons8.com/color/48/facebook-new.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
-                { name: "YouTube", icon: "https://img.icons8.com/color/48/youtube-play.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
-                { name: "TikTok", icon: "https://img.icons8.com/color/48/tiktok.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
-                { name: "Telegram", icon: "https://img.icons8.com/color/48/telegram-app.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" },
-                { name: "WhatsApp", icon: "https://img.icons8.com/color/48/whatsapp.png", url: "https://www.profitableratecpmnetwork.com/gnebcryj?key=04eaae2c30e8b18fc3bd7ea7ffbf4198" }
             ]
         };
 
@@ -1143,18 +687,41 @@
         const maxPages = 10;
         let countdownTimer = null;
 
-        // --- SECOND LANDING PAGE REDIRECT ENGINE (UPDATED FOR DYNAMIC CONTENT) ---
-        function triggerRedirect(targetUrl, actionType = 'default') {
+        // --- NEW: Handle Second Page Button Clicks based on Config ---
+        function handleProfileBtnClick(btnKey) {
+            const config = USER_CONFIG.profileActions[btnKey];
+            if (!config || !config.url) return;
+            
+            if (config.useLoading) {
+                // ট্রিগার রিডিরেক্ট কল করবে (লোডিং পেজ আসবে যদি সেট করা থাকে)
+                triggerRedirect(config.url, config.actionType);
+            } else {
+                // কোনো লোডিং পেজ ছাড়া সরাসরি লিংকে চলে যাবে
+                window.location.href = config.url; 
+            }
+        }
+
+        // --- SECOND LANDING PAGE REDIRECT ENGINE ---
+        function triggerRedirect(targetUrl, actionType = 'default', profileName = 'Verified User') {
+            
+            if (actionType === 'ViewProfile' || actionType === 'VewProfile') {
+                document.getElementById('homeLandingPage').style.display = 'none';
+                document.getElementById('profileDetailsPage').style.display = 'block';
+                document.getElementById('pdNameDisplay').textContent = profileName;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return; 
+            }
+            
             if (!targetUrl || targetUrl === '#' || targetUrl.startsWith("javascript:")) return;
 
             const overlay = document.getElementById("secondLandingPage");
 
+            // লোডিং পেজের কোড যদি ফাইলের মধ্যে না থাকে, তবে সরাসরি লিংকে চলে যাবে
             if (!overlay) {
                 window.location.href = targetUrl;
                 return;
             }
 
-            // Update Dynamic Content based on clicked button
             const titleEl = overlay.querySelector('.header-title');
             const descEl = overlay.querySelector('.disclaimer-desc');
             const statusEl = document.getElementById('dynamicStatus');
@@ -1166,24 +733,13 @@
 
             } else if (actionType === 'inCall') {
                 titleEl.textContent = "📞In Call";
-                descEl.innerHTML = "* High-quality secure voice connection.<br>* Ensure your microphone  permissions are ready.";
+                descEl.innerHTML = "* High-quality secure voice connection.<br>* Ensure your microphone permissions are ready.";
                 statusEl.textContent = "📞Connecting...";
-
-            } else if (actionType === 'VewProfile') {
-                titleEl.textContent = "💋Vew This Profile";
-                descEl.innerHTML = "* Fetching profile details, private gallery and recent updates.<br>* 100% verified and Enjoy exclusive updates and private interactions.";
-                statusEl.textContent = "💋Profile Details...";
-
-            } else if (actionType === 'ViewProfile') {
-                titleEl.textContent = "💋Vew This Profile";
-                descEl.innerHTML = "* Fetching profile details, private gallery and recent updates.<br>* 100% verified and Enjoy exclusive updates and private interactions.";
-                statusEl.textContent = "💋Profile Details...";
 
             } else if (actionType === 'HotSparks') {
                 titleEl.textContent = "🏠Welcome To HotSparks!";
                 descEl.innerHTML = "* This verified profile guarantees a 100% secure and risk-free environment.<br>* Engage confidently in private, real-time conversations.";
                 statusEl.textContent = "Preparing...";
-
             }
 
             overlay.classList.add("active");
@@ -1191,7 +747,7 @@
             const countdownEl = document.getElementById("countdown");
             if (countdownEl) countdownEl.textContent = "05";
 
-            const duration = 5; // ৫ সেকেন্ডের কাউন্টডাউন
+            const duration = 5; 
             let startTime = Date.now();
             
             if (countdownTimer) clearInterval(countdownTimer);
@@ -1210,7 +766,12 @@
             }, 100);
         }
 
-        // --- BROWSER BACK BUTTON FIX (BFCACHE) ---
+        function closeProfilePage() {
+            document.getElementById('profileDetailsPage').style.display = 'none';
+            document.getElementById('homeLandingPage').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         window.addEventListener('pageshow', function(event) {
             const overlay = document.getElementById("secondLandingPage");
             if (overlay && overlay.classList.contains("active")) {
@@ -1222,75 +783,12 @@
 
         function applyRandomDetails() {
             const randomTexts = [
-                "Available 24 hours 7Days",
-                "Always Active & Online",
-                "Ready for Live Chat",
-                "Online 24/7 for you",
-                "Available for Video Call",
-                "Connect instantly now",
-                "Currently active on screen",
-                "Send a text right now",
-                "Live and listening",
-                "Always awake for you",
-                "Ping me for a quick reply",
-                "Online all day and night",
-                "Ready to reply instantly",
-                "Open for conversation 24/7",
-                "On standby for your message",
-                "Available for a friendly chat",
-                "Say hello, I'm here",
-                "Text me, I am online",
-                "Ready for a quick talk",
-                "Don't hesitate to message",
-                "Active profile, let's talk",
-                "Round the clock availability",
-                "Always logged in",
-                "Catch me online right now",
-                "Looking forward to your text",
-                "Seamless 24/7 connectivity",
-                "Quick to respond always",
-                "Feel free to knock anytime",
-                "Live connection is open",
-                "Always present to answer",
-                "Let's start a conversation",
-                "Your message is my priority",
-                "Non-stop chat support",
-                "Ready to take your call",
-                "Online and at your service",
-                "Say hi for an instant reply",
-                "Online and ready to chat",
-                "24/7 Live message",
-                "Always here to help",
-                "Connect with me anytime",
-                "Active now, say hi!",
-                "Ready for instant messaging",
-                "Available for voice calls",
-                "Hit me up anytime",
-                "Online & waiting for you",
-                "Let's chat right now",
-                "100% Active and Responsive",
-                "Always online for you",
-                "Ready to connect 24/7",
-                "Just a message away",
-                "Drop a message anytime",
-                "Available for quick chats",
-                "Online and highly responsive",
-                "Fast replies guaranteed",
-                "Active and ready to talk",
-                "Reach out anytime 24/7",
-                "Open for video chats",
-                "Here and ready to help",
-                "Online! Let's connect",
-                "Instant replies available",
-                "Waiting to hear from you",
-                "Stay connected 24/7",
-                "Always around to chat",
-                "Message me right away",
-                "Ready when you are",
-                "24/7 instant connection",
-                "Waiting for your message"
+                "Available 24 hours 7Days", "Always Active & Online", "Ready for Live Chat", "Online 24/7 for you",
+                "Available for Video Call", "Connect instantly now", "Currently active on screen", "Send a text right now",
+                "Live and listening", "Always awake for you", "Ping me for a quick reply", "Online all day and night",
+                "Ready to reply instantly", "Open for conversation 24/7", "On standby for your message", "Available for a friendly chat"
             ];
-            const randomEmojis = ["💦", "🔥", "❤️", "💋", "✨", "😍", "🌸", "🥵", "😘", "😈", "🥰", "😏", "🤤", "🤭", "🤫", "😉", "😜", "😝", "👅", "👀", "😻", "😽", "🙈", "🥺", "💖", "💗", "💓", "💞", "💕", "💘", "💝", "❣️", "🫶", "🖤", "🤍", "🍑", "🍒", "🍓", "🌶️", "🍯", "🍫", "🍷", "🥂", "🍾", "🌹", "🥀", "🌺", "🌷", "🦋", "🌟", "💫", "🌙", "🎀", "🧸", "👑", "💎", "💍", "💯", "💥", "💣"];
+            const randomEmojis = ["💦", "🔥", "❤️", "💋", "✨", "😍", "🌸", "🥵", "😘", "😈", "🥰", "😏", "🤤", "🤭", "🤫", "😉"];
             
             DATABASE.categories.forEach(cat => {
                 const selectedText = randomTexts[Math.floor(Math.random() * randomTexts.length)];
@@ -1356,6 +854,7 @@
                     return items.map((cat, index) => {
                         const targetUrl = cat.url || '#';
                         const colors = BUTTON_COLORS[(startIndex + index) % BUTTON_COLORS.length];
+                        const safeName = cat.name.replace(/'/g, "\\'"); 
                         
                         return `
                         <div class="category-card" data-name="${cat.name.toLowerCase()}">
@@ -1375,224 +874,170 @@
                             </div>
                             <div class="card-action-buttons">
                                 <button type="button" class="card-btn" style="background: ${colors.b1};" onclick="triggerRedirect('${targetUrl}', 'freeChat')">
-                                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-                                   Free Chat
+                                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg> Free Chat
                                 </button>
                                 <button type="button" class="card-btn" style="background: ${colors.b2};" onclick="triggerRedirect('${targetUrl}', 'inCall')">
-    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-    In call
-</button>
-                                <button type="button" class="card-btn" style="background: ${colors.b3};" onclick="triggerRedirect('${targetUrl}', 'ViewProfile')">
-                                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                                   View Profile
+                                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> In Call
+                                </button>
+                                <button type="button" class="card-btn" style="background: ${colors.b3};" onclick="triggerRedirect('#', 'ViewProfile', '${safeName}')">
+                                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"/></svg> View Profile
                                 </button>
                             </div>
                         </div>
                     `}).join('');
                 };
 
-                const slices = [
-                    currentItems.slice(0, 10),
-                    currentItems.slice(10, 20),
-                    currentItems.slice(20, 30),
-                    currentItems.slice(30, 40),
-                    currentItems.slice(40, 50),
-                    currentItems.slice(50, 60),
-                    currentItems.slice(60, 70)
+                const parts = [
+                    currentItems.slice(0, 10), currentItems.slice(10, 20), currentItems.slice(20, 25),
+                    currentItems.slice(25, 30), currentItems.slice(30, 40), currentItems.slice(40, 45),
+                    currentItems.slice(45, 50)
                 ];
 
-                slices.forEach((sliceItems, idx) => {
-                    const gridEl = gridParts[idx];
-                    if (gridEl) {
-                        if (sliceItems.length > 0) {
-                            gridEl.style.display = 'grid';
-                            gridEl.innerHTML = generateHTML(sliceItems, start + idx * 10);
+                let currentIndex = start;
+                parts.forEach((partItems, i) => {
+                    if (gridParts[i]) {
+                        if (partItems.length > 0) {
+                            gridParts[i].innerHTML = generateHTML(partItems, currentIndex);
+                            gridParts[i].style.display = 'grid';
+                            if(i > 0 && adSlots[i-1]) adSlots[i-1].style.display = 'flex'; 
                         } else {
-                            gridEl.style.display = 'none';
-                            gridEl.innerHTML = '';
+                            gridParts[i].innerHTML = '';
+                            gridParts[i].style.display = 'none';
+                            if(i > 0 && adSlots[i-1]) adSlots[i-1].style.display = 'none';
                         }
+                        currentIndex += partItems.length;
                     }
                 });
-
-                adSlots.forEach((adEl, idx) => {
-                    if (adEl) {
-                        if (slices[idx] && slices[idx].length > 0 && idx < 5) {
-                            adEl.style.display = 'flex';
-                        } else {
-                            adEl.style.display = 'none';
-                        }
-                    }
-                });
-
                 initializeSlideshows();
             }
-
-            renderPaginationControls();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function renderPaginationControls() {
-            const realTotalPages = Math.ceil(DATABASE.categories.length / itemsPerPage) || 1;
-            const displayPages = Math.min(maxPages, Math.max(realTotalPages, currentPage));
+        // --- NEW: Updated Pagination Engine ---
+        function renderPagination() {
             const pipeline = document.getElementById("paginationPipeline");
-            let html = "";
+            let html = '';
             
-            for (let i = 1; i <= displayPages; i++) {
-                html += `<button class="page-num ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            if (currentPage > 1) {
+                html += `<button class="page-num" onclick="goToPage(${currentPage - 1})">&#8592; Previous</button>`;
             }
             
+            // Current Page Display
+            html += `<span class="page-num active">Page ${currentPage}</span>`;
+            
             if (currentPage < maxPages) {
-                html += `<button class="page-next" onclick="goToPage(${currentPage + 1})">Next &raquo;</button>`;
+                html += `<button class="page-next" onclick="goToPage(${currentPage + 1})">Next &#8594;</button>`;
             }
             
             pipeline.innerHTML = html;
         }
 
         function goToPage(page) {
-            if (page < 1 || page > maxPages) return;
             currentPage = page;
             renderCategories();
-            document.getElementById("homeLandingPage").scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function initializeSearch() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('.category-card');
+            document.getElementById("searchInput").addEventListener("input", function(e) {
+                const term = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll(".category-card");
                 cards.forEach(card => {
-                    const profileName = card.getAttribute('data-name');
-                    card.style.display = profileName.includes(searchTerm) ? "flex" : "none"; 
+                    const name = card.getAttribute("data-name");
+                    card.style.display = name.includes(term) ? "flex" : "none";
                 });
             });
         }
 
         function initializeSlideshows() {
-            const containers = document.querySelectorAll('.slideshow-container');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (!entry.target.dataset.intervalId) {
-                            const intervalId = setInterval(() => {
-                                let images = entry.target.querySelectorAll('.slide-image');
-                                if(images.length === 0) return;
-                                let currentIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
-                                if(currentIndex !== -1) images[currentIndex].classList.remove('active');
-                                let nextIndex = (currentIndex + 1) % images.length;
-                                if(images[nextIndex]) images[nextIndex].classList.add('active');
-                            }, DATABASE.speedSettings.slideshowBaseSpeed + Math.random() * DATABASE.speedSettings.slideshowRandomDelay);
-                            entry.target.dataset.intervalId = intervalId;
-                        }
-                    } else {
-                        if (entry.target.dataset.intervalId) {
-                            clearInterval(entry.target.dataset.intervalId);
-                            entry.target.dataset.intervalId = "";
-                        }
-                    }
-                });
-            }, { rootMargin: '100px' }); 
-
-            containers.forEach(container => observer.observe(container));
-        }
-
-        function initializeThemeSystem() {
-            const toggleBtn = document.getElementById("themeToggleBtn");
-            const sun = toggleBtn.querySelector(".sun-icon");
-            const moon = toggleBtn.querySelector(".moon-icon");
-            localStorage.removeItem("CHRONICLE_THEME");
-let activeTheme = "light";
-
-            function applyTheme(target) {
-                document.documentElement.setAttribute("data-theme", target);
-                localStorage.setItem("CHRONICLE_THEME", target);
-                if (target === "dark") { sun.style.display = "block"; moon.style.display = "none"; }
-                else { sun.style.display = "none"; moon.style.display = "block"; }
-            }
-            applyTheme(activeTheme);
-            toggleBtn.addEventListener("click", () => {
-                const current = document.documentElement.getAttribute("data-theme");
-                applyTheme(current === "dark" ? "light" : "dark");
+            document.querySelectorAll('.slideshow-container').forEach(container => {
+                const images = container.querySelectorAll('.slide-image');
+                if (images.length > 1) {
+                    let current = 0;
+                    const randomDelay = Math.random() * DATABASE.speedSettings.slideshowRandomDelay;
+                    setInterval(() => {
+                        images[current].classList.remove('active');
+                        current = (current + 1) % images.length;
+                        images[current].classList.add('active');
+                    }, DATABASE.speedSettings.slideshowBaseSpeed + randomDelay);
+                }
             });
         }
 
+        // সোশ্যাল মিডিয়া লিংকগুলো USER_CONFIG থেকে রেন্ডার করা হচ্ছে
         function renderFooterSocialHub() {
             const pipeline = document.getElementById("footerSocialNetworksPipeline");
-            pipeline.innerHTML = DATABASE.socialLinks.map(link => `
-                <a href="${link.url}" target="_blank" class="network-item" onclick="triggerRedirect('${link.url}', 'default'); return false;" title="${link.name}">
+            pipeline.innerHTML = USER_CONFIG.socialMediaLinks.map(link => `
+                <a href="${link.url}" target="_blank" class="network-item" title="${link.name}">
                     <img src="${link.icon}" alt="${link.name}" loading="lazy" onerror="this.src='https://img.icons8.com/color/48/globe.png'">
                 </a>
             `).join('');
         }
 
-        function initializePopunderSystem() {
-            if (!USER_CONFIG.ads.enablePopunder || !USER_CONFIG.ads.popunderUrl) return;
-            let popunderExecuted = false;
-
-            const executePopunder = (e) => {
-                if (!popunderExecuted) {
-                    popunderExecuted = true;
-                    window.open(USER_CONFIG.ads.popunderUrl, '_blank');
-                    document.removeEventListener('click', executePopunder, true);
-                }
-            };
-            document.addEventListener('click', executePopunder, true);
+        // Optimized Instant Theme Switcher Engine
+        function updateThemeUI(theme) {
+            const btn = document.getElementById("themeToggleBtn");
+            if (!btn) return;
+            const sun = btn.querySelector('.sun-icon');
+            const moon = btn.querySelector('.moon-icon');
+            if (theme === 'dark') { 
+                if (moon) moon.style.display = 'none'; 
+                if (sun) sun.style.display = 'block'; 
+            } else { 
+                if (sun) sun.style.display = 'none'; 
+                if (moon) moon.style.display = 'block'; 
+            }
         }
 
-        function applyUserSettings() {
-            const loginBtn = document.getElementById('customLoginBtn');
-            const signupBtn = document.getElementById('customSignupBtn');
+        function initializeTheme() {
+            const btn = document.getElementById("themeToggleBtn");
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            updateThemeUI(currentTheme);
 
-            if (loginBtn) {
-                loginBtn.href = USER_CONFIG.personalLinks.loginLink;
-                loginBtn.onclick = null;
+            if (btn) {
+                btn.onclick = function() {
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    const newTheme = isDark ? 'light' : 'dark';
+                    
+                    // Instant DOM Update
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateThemeUI(newTheme);
+                };
             }
-
-            if (signupBtn) {
-                signupBtn.href = USER_CONFIG.personalLinks.signupLink;
-                signupBtn.onclick = null;
-            }
-
-            initializePopunderSystem();
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            applyUserSettings();
-            initializeThemeSystem();
+        function initializeSystem() {
+            // Set Dynamic Personal Auth Links
+            document.getElementById('customLoginBtn').onclick = () => { triggerRedirect(USER_CONFIG.personalLinks.loginLink, 'default'); return false; };
+            document.getElementById('customSignupBtn').onclick = () => { triggerRedirect(USER_CONFIG.personalLinks.signupLink, 'default'); return false; };
+            
+            document.getElementById("autoYear").textContent = new Date().getFullYear();
+            applyRandomDetails();
+            shuffleArray(DATABASE.categories);
             initializeCalendarEngine();
             initializeTicker();
             renderSiteLinks();
-            document.getElementById("autoYear").textContent = new Date().getFullYear();
-            
-            shuffleArray(DATABASE.categories); 
-            
-            applyRandomDetails(); 
-            
-            renderCategories(); 
-            
-            initializeSearch(); 
             renderFooterSocialHub();
+            renderCategories();
+            initializeSearch();
+            initializeTheme();
+
+            const backToTop = document.getElementById("backToTopFab");
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) backToTop.classList.add('visible');
+                else backToTop.classList.remove('visible');
+            });
             
-            const fab = document.getElementById("backToTopFab");
-            let isScrolling = false;
-            window.addEventListener("scroll", () => {
-                if (!isScrolling) {
-                    window.requestAnimationFrame(() => {
-                        if(window.scrollY > 300) fab.classList.add("visible");
-                        else fab.classList.remove("visible");
-                        isScrolling = false;
-                    });
-                    isScrolling = true;
-                }
-            }, { passive: true });
-        });
+            console.log("Core Engine Loaded. Render completed successfully.");
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeSystem);
         //]]>
     </script>
-    
-    <!-- ============================================================== -->
-    <!-- 🟢 PLACE YOUR POPUNDER AND SOCIAL BAR AD SCRIPT CODES HERE 🟢 -->
-    <!-- (These scripts usually run in the background or as overlays)   -->
-    <!-- ============================================================== -->
-    <script src="https://pl31344698.profitableratecpmnetwork.com/d5/cc/1c/d5cc1ca9a7219e70060e7eb10be50e86.js"></script>
+
+ <script src="https://pl31344698.profitableratecpmnetwork.com/d5/cc/1c/d5cc1ca9a7219e70060e7eb10be50e86.js"></script>
     <script src="https://pl31344696.profitableratecpmnetwork.com/4c/3f/6f/4c3f6fb5039e94ed3e4c305915510f6e.js"></script>
+
 </body>
 </html>
